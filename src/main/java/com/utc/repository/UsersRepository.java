@@ -1,11 +1,11 @@
 package com.utc.repository;
 
-import com.utc.model.User;
+import com.utc.model.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 /**
- * Project_name : java
+ * Project_name : UTC_Java
  *
  * @author : XuShiTa
  * @version : 1.0
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Repository;
  * Description :
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUsername(String username);
+public interface UsersRepository extends JpaRepository<Users, Long> {
+    Users findByUsername(String username);
 }
