@@ -1,1 +1,1 @@
-rootProject.name = "java"
+rootProject.name = "UTC_Java"

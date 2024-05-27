@@ -1,11 +1,11 @@
-package com.utc.service;
+package com.utc.services;
 
 import com.utc.contants.ResponseStatus;
 import com.utc.contants.UserStatus;
-import com.utc.dto.request.UserRequest;
-import com.utc.dto.response.ApiResponse;
-import com.utc.dto.response.UserResponse;
-import com.utc.model.Users;
+import com.utc.payload.request.UserRequest;
+import com.utc.payload.response.ApiResponse;
+import com.utc.payload.response.UserResponse;
+import com.utc.models.Users;
 import com.utc.repository.UsersRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

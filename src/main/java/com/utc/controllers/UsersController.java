@@ -1,11 +1,11 @@
-package com.utc.controller;
+package com.utc.controllers;
 
-import com.utc.dto.request.UserRequest;
-import com.utc.dto.response.ApiResponse;
-import com.utc.dto.response.UserResponse;
-import com.utc.model.Users;
+import com.utc.payload.request.UserRequest;
+import com.utc.payload.response.ApiResponse;
+import com.utc.payload.response.UserResponse;
+import com.utc.models.Users;
 import com.utc.repository.UsersRepository;
-import com.utc.service.UsersService;
+import com.utc.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;

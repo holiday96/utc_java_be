@@ -1,4 +1,4 @@
-package com.utc.dto.request;
+package com.utc.payload.request;
 
 import lombok.Data;
 

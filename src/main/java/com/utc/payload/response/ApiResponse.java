@@ -1,4 +1,4 @@
-package com.utc.dto.response;
+package com.utc.payload.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

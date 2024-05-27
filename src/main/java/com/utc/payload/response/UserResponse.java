@@ -1,4 +1,4 @@
-package com.utc.dto.response;
+package com.utc.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
