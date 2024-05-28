@@ -1,13 +1,13 @@
 package com.utc.contants;
 
-public enum UserStatus {
+public enum EStatus {
     ACTIVE(1),
     INACTIVE(0),
-    BLOCKED(-1);
+    DELETED(-1);
 
     public final Integer code;
 
-    private UserStatus(Integer code) {
+    private EStatus(Integer code) {
         this.code = code;
     }
 }

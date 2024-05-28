@@ -4,10 +4,12 @@ import com.utc.contants.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 /**
@@ -32,6 +34,10 @@ public class Role {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private ERole name;
+
+    @Size(min = 1, max = 1)
+    @Column(columnDefinition = "tinyint", length = 1)
+    private int status;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)

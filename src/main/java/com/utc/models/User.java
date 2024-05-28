@@ -1,6 +1,5 @@
 package com.utc.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
@@ -30,7 +29,8 @@ import java.util.Set;
 @Table(name = "user",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username"),
-                @UniqueConstraint(columnNames = "email")
+                @UniqueConstraint(columnNames = "email"),
+                @UniqueConstraint(columnNames = "phone")
         })
 public class User {
     @Id
@@ -38,8 +38,19 @@ public class User {
     private Long id;
 
     @NotBlank
-    @Size(max = 20)
-    private String username;
+    @Size(max = 64)
+    private String fullName;
+
+    @Size(max = 255)
+    private String avatar;
+
+    @NotBlank
+    @Size(max = 255)
+    private String address;
+
+    @NotBlank
+    @Size(max = 255)
+    private String phone;
 
     @NotBlank
     @Size(max = 50)
@@ -47,11 +58,19 @@ public class User {
     private String email;
 
     @NotBlank
+    @Size(max = 20)
+    private String username;
+
+    @NotBlank
     @Size(max = 120)
     private String password;
 
+    @Size(min = 1, max = 1)
+    @Column(columnDefinition = "tinyint", length = 1)
+    private int status;
+
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
+    @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();

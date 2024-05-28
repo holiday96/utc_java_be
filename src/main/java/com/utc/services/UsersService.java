@@ -1,7 +1,7 @@
 package com.utc.services;
 
 import com.utc.contants.ResponseStatus;
-import com.utc.contants.UserStatus;
+import com.utc.contants.EStatus;
 import com.utc.payload.request.UserRequest;
 import com.utc.payload.response.ApiResponse;
 import com.utc.payload.response.UserResponse;
@@ -41,7 +41,7 @@ public class UsersService {
                 .phone(request.getPhone())
                 .username(request.getUsername())
                 .password(encodedPassword)
-                .status(UserStatus.ACTIVE.code)
+                .status(EStatus.ACTIVE.code)
                 .modifiedBy("ADMIN")
                 .build();
 
