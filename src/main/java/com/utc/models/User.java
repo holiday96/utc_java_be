@@ -1,14 +1,14 @@
 package com.utc.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,9 +24,11 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "user",
+@Table(name = "users",
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username"),
                 @UniqueConstraint(columnNames = "email"),
@@ -49,7 +51,7 @@ public class User {
     private String address;
 
     @NotBlank
-    @Size(max = 255)
+    @Size(max = 15)
     private String phone;
 
     @NotBlank
@@ -65,10 +67,12 @@ public class User {
     @Size(max = 120)
     private String password;
 
-    @Size(min = 1, max = 1)
+    @Min(-1)
+    @Max(1)
     @Column(columnDefinition = "tinyint", length = 1)
-    private int status;
+    private Integer status;
 
+    @Builder.Default
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -80,11 +84,5 @@ public class User {
     private Date createdDate;
 
     private String modifiedBy;
-
-    public User(String username, String email, String password) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
 
 }

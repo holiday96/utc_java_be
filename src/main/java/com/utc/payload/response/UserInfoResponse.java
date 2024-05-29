@@ -17,7 +17,12 @@ import java.util.List;
 @AllArgsConstructor
 public class UserInfoResponse {
     private Long id;
-    private String username;
+    private String fullName;
+    private String avatar;
+    private String address;
+    private String phone;
     private String email;
+    private String username;
+    private Integer status;
     private List<String> roles;
 }

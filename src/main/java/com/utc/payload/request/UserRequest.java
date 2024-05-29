@@ -21,7 +21,7 @@ public class UserRequest {
     private String address;
 
     @NotNull
-    @Size(max = 255)
+    @Size(max = 15)
     private String phone;
 
     @NotNull

@@ -4,12 +4,12 @@ import com.utc.contants.ERole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Date;
 
 /**
@@ -25,7 +25,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "role")
+@Table(name = "roles")
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +35,10 @@ public class Role {
     @Column(length = 20)
     private ERole name;
 
-    @Size(min = 1, max = 1)
+    @Min(-1)
+    @Max(1)
     @Column(columnDefinition = "tinyint", length = 1)
-    private int status;
+    private Integer status;
 
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)

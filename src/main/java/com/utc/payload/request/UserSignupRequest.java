@@ -16,19 +16,31 @@ import java.util.Set;
  * Description :
  */
 @Data
-public class SignupRequest {
+public class UserSignupRequest {
     @NotBlank
-    @Size(min = 3, max = 20)
-    private String username;
+    @Size(max = 64)
+    private String fullName;
+
+    @NotBlank
+    @Size(max = 255)
+    private String address;
+
+    @NotBlank
+    @Size(max = 15)
+    private String phone;
 
     @NotBlank
     @Size(max = 50)
     @Email
     private String email;
 
-    private Set<String> role;
+    @NotBlank
+    @Size(min = 3, max = 20)
+    private String username;
 
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
+
+    private Set<String> role;
 }
