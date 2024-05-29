@@ -2,8 +2,8 @@ package com.utc.payload.request;
 
 import lombok.Data;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Set;
 
@@ -27,11 +27,18 @@ public class UserSignupRequest {
 
     @NotBlank
     @Size(max = 15)
+    @Pattern(
+            regexp = "^\\d{1,15}$",
+            message = "{phone_invalid}"
+    )
     private String phone;
 
     @NotBlank
     @Size(max = 50)
-    @Email
+    @Pattern(
+            regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$",
+            message = "{email_invalid}"
+    )
     private String email;
 
     @NotBlank
