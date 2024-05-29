@@ -70,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
     UserService userService;
 
     @Override
-    public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
+    public ResponseEntity<SigninResponse> authenticateUser(LoginRequest loginRequest) {
         UserInfoResponse userInfoResponse = userService.findByUsername(loginRequest.getUsername());
         if (Objects.equals(userInfoResponse.getStatus(), UserStatus.INACTIVE.code)) {
             throw new ForbiddenException(
