@@ -3,6 +3,7 @@ package com.utc.controllers;
 import com.utc.payload.request.LoginRequest;
 import com.utc.payload.request.UserSignupRequest;
 import com.utc.payload.response.RestApiResponse;
+import com.utc.payload.response.SigninResponse;
 import com.utc.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class AuthController {
     AuthService authService;
 
     @PostMapping("/signin")
-    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<SigninResponse> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         return authService.authenticateUser(loginRequest);
     }
 
