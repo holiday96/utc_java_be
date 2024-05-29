@@ -21,7 +21,6 @@ import com.utc.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -106,6 +105,13 @@ public class AuthServiceImpl implements AuthService {
             throw new ValidateException(
                     ApiStatus.BAD_REQUEST.toString().toLowerCase(),
                     MessageUtils.getProperty(messageSource, "username_already_exist")
+            );
+        }
+
+        if (Boolean.TRUE.equals(userRepository.existsByPhone(userSignUpRequest.getPhone()))) {
+            throw new ValidateException(
+                    ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                    MessageUtils.getProperty(messageSource, "phone_already_exist")
             );
         }
 
