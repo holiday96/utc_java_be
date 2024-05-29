@@ -2,6 +2,7 @@ package com.utc.controllers;
 
 import com.utc.payload.request.LoginRequest;
 import com.utc.payload.request.UserSignupRequest;
+import com.utc.payload.response.RestApiResponse;
 import com.utc.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +32,12 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody UserSignupRequest userSignUpRequest) {
+    public ResponseEntity<RestApiResponse> registerUser(@Valid @RequestBody UserSignupRequest userSignUpRequest) {
         return authService.registerUser(userSignUpRequest);
     }
 
     @PostMapping("/signout")
-    public ResponseEntity<String> logoutUser() {
+    public ResponseEntity<RestApiResponse> logoutUser() {
         return authService.logoutUser();
     }
 }

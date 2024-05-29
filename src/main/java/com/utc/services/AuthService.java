@@ -2,6 +2,7 @@ package com.utc.services;
 
 import com.utc.payload.request.LoginRequest;
 import com.utc.payload.request.UserSignupRequest;
+import com.utc.payload.response.RestApiResponse;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -15,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 public interface AuthService {
     ResponseEntity<?> authenticateUser(LoginRequest loginRequest);
 
-    ResponseEntity<?> registerUser(UserSignupRequest userSignUpRequest);
+    ResponseEntity<RestApiResponse> registerUser(UserSignupRequest userSignUpRequest);
 
-    ResponseEntity<String> logoutUser();
+    ResponseEntity<RestApiResponse> logoutUser();
 }

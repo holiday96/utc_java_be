@@ -1,20 +1,27 @@
 package com.utc.services.impl;
 
+import com.utc.contants.ApiStatus;
 import com.utc.contants.ERole;
-import com.utc.contants.ResponseStatus;
 import com.utc.contants.UserStatus;
+import com.utc.exception.ForbiddenException;
+import com.utc.exception.ValidateException;
 import com.utc.models.Role;
 import com.utc.models.User;
 import com.utc.payload.request.LoginRequest;
 import com.utc.payload.request.UserSignupRequest;
+import com.utc.payload.response.RestApiResponse;
+import com.utc.payload.response.SigninResponse;
 import com.utc.payload.response.UserInfoResponse;
 import com.utc.repository.RoleRepository;
 import com.utc.repository.UserRepository;
 import com.utc.services.AuthService;
 import com.utc.services.UserService;
 import com.utc.utils.JwtUtils;
+import com.utc.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,7 +53,13 @@ public class AuthServiceImpl implements AuthService {
     PasswordEncoder encoder;
 
     @Autowired
+    MessageSource messageSource;
+
+    @Autowired
     JwtUtils jwtUtils;
+
+    @Autowired
+    MessageUtils messageUtils;
 
     @Autowired
     UserRepository userRepository;
@@ -61,9 +74,13 @@ public class AuthServiceImpl implements AuthService {
     public ResponseEntity<?> authenticateUser(LoginRequest loginRequest) {
         UserInfoResponse userInfoResponse = userService.findByUsername(loginRequest.getUsername());
         if (Objects.equals(userInfoResponse.getStatus(), UserStatus.INACTIVE.code)) {
-            return ResponseEntity.ok().body(UserStatus.INACTIVE);
+            throw new ForbiddenException(
+                    MessageUtils.getProperty(messageSource, "user_inactive")
+            );
         } else if (Objects.equals(userInfoResponse.getStatus(), UserStatus.BLOCKED.code)) {
-            return ResponseEntity.ok().body(UserStatus.BLOCKED);
+            throw new ForbiddenException(
+                    MessageUtils.getProperty(messageSource, "user_blocked")
+            );
         } else {
             Authentication authentication = authenticationManager
                     .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
@@ -75,18 +92,28 @@ public class AuthServiceImpl implements AuthService {
             ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
 
             return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
-                    .body(userInfoResponse);
+                    .body(new SigninResponse(
+                            ApiStatus.SUCCESS.code,
+                            ApiStatus.SUCCESS.toString().toLowerCase(),
+                            userInfoResponse
+                    ));
         }
     }
 
     @Override
-    public ResponseEntity<?> registerUser(UserSignupRequest userSignUpRequest) {
+    public ResponseEntity<RestApiResponse> registerUser(UserSignupRequest userSignUpRequest) {
         if (Boolean.TRUE.equals(userRepository.existsByUsername(userSignUpRequest.getUsername()))) {
-            return ResponseEntity.badRequest().body("Username is already taken!");
+            throw new ValidateException(
+                    ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                    MessageUtils.getProperty(messageSource, "username_already_exist")
+            );
         }
 
         if (Boolean.TRUE.equals(userRepository.existsByEmail(userSignUpRequest.getEmail()))) {
-            return ResponseEntity.badRequest().body("Email is already in use!");
+            throw new ValidateException(
+                    ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                    MessageUtils.getProperty(messageSource, "email_already_exist")
+            );
         }
 
         // Create new user's account
@@ -106,20 +133,29 @@ public class AuthServiceImpl implements AuthService {
 
         if (strRoles == null) {
             Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Role is not found."));
+                    .orElseThrow(() -> new ValidateException(
+                            ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                            MessageUtils.getProperty(messageSource, "role_not_found")
+                    ));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "admin":
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Role is not found."));
+                                .orElseThrow(() -> new ValidateException(
+                                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                                        MessageUtils.getProperty(messageSource, "role_not_found")
+                                ));
                         roles.add(adminRole);
 
                         break;
                     default:
                         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Role is not found."));
+                                .orElseThrow(() -> new ValidateException(
+                                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                                        MessageUtils.getProperty(messageSource, "role_not_found")
+                                ));
                         roles.add(userRole);
                 }
             });
@@ -128,13 +164,21 @@ public class AuthServiceImpl implements AuthService {
         user.setRoles(roles);
         userRepository.save(user);
 
-        return ResponseEntity.ok(ResponseStatus.SUCCESS.msg);
+        return ResponseEntity.ok(
+                new RestApiResponse(
+                        ApiStatus.SUCCESS.code,
+                        ApiStatus.SUCCESS.toString().toLowerCase()
+                )
+        );
     }
 
     @Override
-    public ResponseEntity<String> logoutUser() {
+    public ResponseEntity<RestApiResponse> logoutUser() {
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(ResponseStatus.SUCCESS.msg);
+                .body(new RestApiResponse(
+                        ApiStatus.SUCCESS.code,
+                        ApiStatus.SUCCESS.toString().toLowerCase()
+                ));
     }
 }
