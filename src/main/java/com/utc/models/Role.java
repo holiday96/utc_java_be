@@ -1,15 +1,15 @@
-package com.utc.model;
+package com.utc.models;
 
+import com.utc.contants.ERole;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Date;
 
 /**
@@ -17,26 +17,27 @@ import java.util.Date;
  *
  * @author : XuShiTa
  * @version : 1.0
- * @since : 25.5.2024
+ * @since : 27.5.2024
  * Description :
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-public class Users {
+@Table(name = "roles")
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Long roleId;
-    private String fullName;
-    private String avatar;
-    private String address;
-    private String phone;
-    private String username;
-    private String password;
+    private Integer id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private ERole name;
+
+    @Min(-1)
+    @Max(1)
+    @Column(columnDefinition = "tinyint", length = 1)
     private Integer status;
 
     @CreatedDate
