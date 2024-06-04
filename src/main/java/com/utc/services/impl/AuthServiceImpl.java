@@ -46,28 +46,28 @@ import java.util.Set;
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    private AuthenticationManager authenticationManager;
 
     @Autowired
-    PasswordEncoder encoder;
+    private PasswordEncoder encoder;
 
     @Autowired
-    MessageSource messageSource;
+    private MessageSource messageSource;
 
     @Autowired
-    JwtUtils jwtUtils;
+    private JwtUtils jwtUtils;
 
     @Autowired
-    MessageUtils messageUtils;
+    private MessageUtils messageUtils;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Override
     public ResponseEntity<SigninResponse> authenticateUser(LoginRequest loginRequest) {
