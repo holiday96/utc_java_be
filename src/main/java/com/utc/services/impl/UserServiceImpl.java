@@ -1,14 +1,29 @@
 package com.utc.services.impl;
 
+import com.utc.contants.ApiStatus;
+import com.utc.contants.ERole;
+import com.utc.contants.UserStatus;
+import com.utc.exception.ValidateException;
+import com.utc.models.Role;
 import com.utc.models.User;
+import com.utc.payload.request.AddUserRequest;
+import com.utc.payload.response.RestApiResponse;
 import com.utc.payload.response.UserInfoResponse;
+import com.utc.repository.RoleRepository;
 import com.utc.repository.UserRepository;
 import com.utc.services.UserService;
+import com.utc.utils.JwtUtils;
+import com.utc.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +38,22 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private PasswordEncoder encoder;
+
+    @Autowired
+    private MessageSource messageSource;
+
+    @Autowired
+    private JwtUtils jwtUtils;
+
+    @Autowired
+    private MessageUtils messageUtils;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     @Override
     public UserInfoResponse findByUsername(String username) {
@@ -43,6 +73,85 @@ public class UserServiceImpl implements UserService {
                 user.getUsername(),
                 user.getStatus(),
                 roles
+        );
+    }
+
+    @Override
+    public ResponseEntity<RestApiResponse> addUser(AddUserRequest addUserRequest) {
+        if (Boolean.TRUE.equals(userRepository.existsByUsername(addUserRequest.getUsername()))) {
+            throw new ValidateException(
+                    ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                    MessageUtils.getProperty(messageSource, "username_already_exist")
+            );
+        }
+
+        if (Boolean.TRUE.equals(userRepository.existsByPhone(addUserRequest.getPhone()))) {
+            throw new ValidateException(
+                    ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                    MessageUtils.getProperty(messageSource, "phone_already_exist")
+            );
+        }
+
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(addUserRequest.getEmail()))) {
+            throw new ValidateException(
+                    ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                    MessageUtils.getProperty(messageSource, "email_already_exist")
+            );
+        }
+
+        // Create new user's account
+        User user = User.builder()
+                .fullName(addUserRequest.getFullName())
+                .address(addUserRequest.getAddress())
+                .phone(addUserRequest.getPhone())
+                .email(addUserRequest.getEmail())
+                .username(addUserRequest.getUsername())
+                .password(encoder.encode(addUserRequest.getPassword()))
+                .status(UserStatus.ACTIVE.code)
+                .modifiedBy(ERole.ROLE_USER.name())
+                .build();
+
+        Set<String> strRoles = addUserRequest.getRole();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles == null) {
+            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new ValidateException(
+                            ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                            MessageUtils.getProperty(messageSource, "role_not_found")
+                    ));
+            roles.add(userRole);
+        } else {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new ValidateException(
+                                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                                        MessageUtils.getProperty(messageSource, "role_not_found")
+                                ));
+                        roles.add(adminRole);
+
+                        break;
+                    default:
+                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new ValidateException(
+                                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                                        MessageUtils.getProperty(messageSource, "role_not_found")
+                                ));
+                        roles.add(userRole);
+                }
+            });
+        }
+
+        user.setRoles(roles);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(
+                new RestApiResponse(
+                        ApiStatus.SUCCESS.code,
+                        ApiStatus.SUCCESS.toString().toLowerCase()
+                )
         );
     }
 }

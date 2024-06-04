@@ -1,6 +1,9 @@
 package com.utc.services;
 
+import com.utc.payload.request.AddUserRequest;
+import com.utc.payload.response.RestApiResponse;
 import com.utc.payload.response.UserInfoResponse;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Project_name : UTC_Java
@@ -12,4 +15,6 @@ import com.utc.payload.response.UserInfoResponse;
  */
 public interface UserService {
     UserInfoResponse findByUsername(String username);
+
+    ResponseEntity<RestApiResponse> addUser(AddUserRequest addUserRequest);
 }
