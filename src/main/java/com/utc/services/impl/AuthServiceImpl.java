@@ -108,64 +108,21 @@ public class AuthServiceImpl implements AuthService {
             );
         }
 
-        if (Boolean.TRUE.equals(userRepository.existsByPhone(userSignUpRequest.getPhone()))) {
-            throw new ValidateException(
-                    ApiStatus.BAD_REQUEST.toString().toLowerCase(),
-                    MessageUtils.getProperty(messageSource, "phone_already_exist")
-            );
-        }
-
-        if (Boolean.TRUE.equals(userRepository.existsByEmail(userSignUpRequest.getEmail()))) {
-            throw new ValidateException(
-                    ApiStatus.BAD_REQUEST.toString().toLowerCase(),
-                    MessageUtils.getProperty(messageSource, "email_already_exist")
-            );
-        }
-
         // Create new user's account
         User user = User.builder()
-                .fullName(userSignUpRequest.getFullName())
-                .address(userSignUpRequest.getAddress())
-                .phone(userSignUpRequest.getPhone())
-                .email(userSignUpRequest.getEmail())
                 .username(userSignUpRequest.getUsername())
                 .password(encoder.encode(userSignUpRequest.getPassword()))
                 .status(UserStatus.ACTIVE.code)
                 .modifiedBy(ERole.ROLE_USER.name())
                 .build();
 
-        Set<String> strRoles = userSignUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
-
-        if (strRoles == null) {
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new ValidateException(
-                            ApiStatus.BAD_REQUEST.toString().toLowerCase(),
-                            MessageUtils.getProperty(messageSource, "role_not_found")
-                    ));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new ValidateException(
-                                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
-                                        MessageUtils.getProperty(messageSource, "role_not_found")
-                                ));
-                        roles.add(adminRole);
-
-                        break;
-                    default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new ValidateException(
-                                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
-                                        MessageUtils.getProperty(messageSource, "role_not_found")
-                                ));
-                        roles.add(userRole);
-                }
-            });
-        }
+        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                .orElseThrow(() -> new ValidateException(
+                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                        MessageUtils.getProperty(messageSource, "role_not_found")
+                ));
+        roles.add(userRole);
 
         user.setRoles(roles);
         userRepository.save(user);

@@ -17,29 +17,6 @@ import java.util.Set;
  */
 @Data
 public class UserSignupRequest {
-    @NotBlank
-    @Size(max = 64)
-    private String fullName;
-
-    @NotBlank
-    @Size(max = 255)
-    private String address;
-
-    @NotBlank
-    @Size(max = 15)
-    @Pattern(
-            regexp = "^\\d{1,15}$",
-            message = "{phone_invalid}"
-    )
-    private String phone;
-
-    @NotBlank
-    @Size(max = 50)
-    @Pattern(
-            regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$",
-            message = "{email_invalid}"
-    )
-    private String email;
 
     @NotBlank
     @Size(min = 3, max = 20)
@@ -48,6 +25,4 @@ public class UserSignupRequest {
     @NotBlank
     @Size(min = 6, max = 40)
     private String password;
-
-    private Set<String> role;
 }

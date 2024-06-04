@@ -39,22 +39,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
     @Size(max = 64)
     private String fullName;
 
     @Size(max = 255)
     private String avatar;
 
-    @NotBlank
     @Size(max = 255)
     private String address;
 
-    @NotBlank
     @Size(max = 15)
     private String phone;
 
-    @NotBlank
     @Size(max = 50)
     @Email
     private String email;
