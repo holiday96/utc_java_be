@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * Project_name : UTC_Java
@@ -34,7 +35,9 @@ public class CommonExceptionHandler {
             BindException.class,
             HttpMessageNotReadableException.class,
             MissingServletRequestParameterException.class,
-            HttpRequestMethodNotSupportedException.class
+            HttpRequestMethodNotSupportedException.class,
+            IllegalArgumentException.class,
+            MethodArgumentTypeMismatchException.class
     })
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
