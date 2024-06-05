@@ -3,10 +3,12 @@ package com.utc.services.impl;
 import com.utc.contants.ApiStatus;
 import com.utc.contants.ERole;
 import com.utc.contants.UserStatus;
+import com.utc.exception.ResourceNotExistsException;
 import com.utc.exception.ValidateException;
 import com.utc.models.Role;
 import com.utc.models.User;
 import com.utc.payload.request.AddUserRequest;
+import com.utc.payload.request.UpdateUserRequest;
 import com.utc.payload.response.RestApiResponse;
 import com.utc.payload.response.UserInfoResponse;
 import com.utc.repository.RoleRepository;
@@ -14,6 +16,7 @@ import com.utc.repository.UserRepository;
 import com.utc.services.UserService;
 import com.utc.utils.JwtUtils;
 import com.utc.utils.MessageUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
@@ -153,5 +156,97 @@ public class UserServiceImpl implements UserService {
                         ApiStatus.SUCCESS.toString().toLowerCase()
                 )
         );
+    }
+
+    @Override
+    public ResponseEntity<RestApiResponse> updateUser(Long userId, UpdateUserRequest updateUserRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotExistsException("User not found with id: " + userId));
+
+        // Create new user's account
+        if (StringUtils.isNotBlank(updateUserRequest.getFullName())) {
+            user.setFullName(updateUserRequest.getFullName());
+        }
+        if (StringUtils.isNotBlank(updateUserRequest.getAvatar())) {
+            user.setAvatar(updateUserRequest.getAvatar());
+        }
+        if (StringUtils.isNotBlank(updateUserRequest.getAddress())) {
+            user.setAddress(updateUserRequest.getAddress());
+        }
+        if (StringUtils.isNotBlank(updateUserRequest.getUsername())) {
+            if (Boolean.TRUE.equals(userRepository.existsByUsername(updateUserRequest.getUsername()))) {
+                throw new ValidateException(
+                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                        MessageUtils.getProperty(messageSource, "username_already_exist")
+                );
+            }
+            user.setUsername(updateUserRequest.getUsername());
+        }
+        if (StringUtils.isNotBlank(updateUserRequest.getPhone())) {
+            if (Boolean.TRUE.equals(userRepository.existsByPhone(updateUserRequest.getPhone()))) {
+                throw new ValidateException(
+                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                        MessageUtils.getProperty(messageSource, "phone_already_exist")
+                );
+            }
+            user.setPhone(updateUserRequest.getPhone());
+        }
+        if (StringUtils.isNotBlank(updateUserRequest.getEmail())) {
+            if (Boolean.TRUE.equals(userRepository.existsByEmail(updateUserRequest.getEmail()))) {
+                throw new ValidateException(
+                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                        MessageUtils.getProperty(messageSource, "email_already_exist")
+                );
+            }
+            user.setEmail(updateUserRequest.getEmail());
+        }
+        if (StringUtils.isNotBlank(updateUserRequest.getPassword())) {
+            user.setPassword(encoder.encode(updateUserRequest.getPassword()));
+        }
+        if (updateUserRequest.getStatus() != null) {
+            user.setStatus(updateUserRequest.getStatus());
+        }
+        user.setModifiedBy(ERole.ROLE_ADMIN.name());
+
+        Set<Role> roles = getRoles(updateUserRequest);
+
+        user.setRoles(roles);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(
+                new RestApiResponse(
+                        ApiStatus.SUCCESS.code,
+                        ApiStatus.SUCCESS.toString().toLowerCase()
+                )
+        );
+    }
+
+    private Set<Role> getRoles(UpdateUserRequest updateUserRequest) {
+        Set<String> strRoles = updateUserRequest.getRole();
+        Set<Role> roles = new HashSet<>();
+
+        if (strRoles != null) {
+            strRoles.forEach(role -> {
+                switch (role) {
+                    case "admin":
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new ValidateException(
+                                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                                        MessageUtils.getProperty(messageSource, "role_not_found")
+                                ));
+                        roles.add(adminRole);
+
+                        break;
+                    default:
+                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new ValidateException(
+                                        ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                                        MessageUtils.getProperty(messageSource, "role_not_found")
+                                ));
+                        roles.add(userRole);
+                }
+            });
+        }
+        return roles;
     }
 }
