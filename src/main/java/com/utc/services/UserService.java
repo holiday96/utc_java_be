@@ -1,6 +1,7 @@
 package com.utc.services;
 
 import com.utc.payload.request.AddUserRequest;
+import com.utc.payload.request.UpdateUserRequest;
 import com.utc.payload.response.RestApiResponse;
 import com.utc.payload.response.UserInfoResponse;
 import org.springframework.http.ResponseEntity;
@@ -17,4 +18,6 @@ public interface UserService {
     UserInfoResponse findByUsername(String username);
 
     ResponseEntity<RestApiResponse> addUser(AddUserRequest addUserRequest);
+
+    ResponseEntity<RestApiResponse> updateUser(Long userId, UpdateUserRequest updateUserRequest);
 }

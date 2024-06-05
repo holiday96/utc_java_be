@@ -1,8 +1,11 @@
 package com.utc.controllers;
 
 import com.utc.payload.request.AddUserRequest;
+import com.utc.payload.request.UpdateUserRequest;
 import com.utc.payload.response.RestApiResponse;
 import com.utc.services.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,12 +26,22 @@ import javax.validation.Valid;
 @RequestMapping("/api/users")
 public class UserController {
 
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     @Autowired
     private UserService userService;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RestApiResponse> addUser(@Valid @RequestBody AddUserRequest addUserRequest) {
+        log.info("Request addUser: {}", addUserRequest);
         return userService.addUser(addUserRequest);
+    }
+
+    @PatchMapping("/{user_id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<RestApiResponse> updateUser(@PathVariable("user_id") Long userId, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
+        log.info("Request updateUser: {}", updateUserRequest);
+        return userService.updateUser(userId, updateUserRequest);
     }
 }
