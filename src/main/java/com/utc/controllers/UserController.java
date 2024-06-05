@@ -2,6 +2,7 @@ package com.utc.controllers;
 
 import com.utc.payload.request.AddUserRequest;
 import com.utc.payload.request.UpdateUserRequest;
+import com.utc.payload.response.GetAllUserResponse;
 import com.utc.payload.response.RestApiResponse;
 import com.utc.services.UserService;
 import org.slf4j.Logger;
@@ -12,6 +13,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 
 /**
  * Project_name : UTC_Java
@@ -43,5 +46,15 @@ public class UserController {
     public ResponseEntity<RestApiResponse> updateUser(@PathVariable("user_id") Long userId, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
         log.info("Request updateUser: {}", updateUserRequest);
         return userService.updateUser(userId, updateUserRequest);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<GetAllUserResponse> getUserList(
+            @RequestParam(defaultValue = "1") @Min(1) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size
+    ) {
+        log.info("Request getUserList: page={}, size={}", page, size);
+        return userService.getAllUsers(page, size);
     }
 }
