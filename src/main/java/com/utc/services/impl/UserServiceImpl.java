@@ -9,21 +9,23 @@ import com.utc.models.Role;
 import com.utc.models.User;
 import com.utc.payload.request.AddUserRequest;
 import com.utc.payload.request.UpdateUserRequest;
-import com.utc.payload.response.RestApiResponse;
-import com.utc.payload.response.UserInfoResponse;
+import com.utc.payload.response.*;
 import com.utc.repository.RoleRepository;
 import com.utc.repository.UserRepository;
 import com.utc.services.UserService;
-import com.utc.utils.JwtUtils;
 import com.utc.utils.MessageUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,9 +47,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private MessageSource messageSource;
-
-    @Autowired
-    private JwtUtils jwtUtils;
 
     @Autowired
     private MessageUtils messageUtils;
@@ -248,5 +247,48 @@ public class UserServiceImpl implements UserService {
             });
         }
         return roles;
+    }
+
+    @Override
+    public ResponseEntity<GetAllUserResponse> getAllUsers(int page, int size) {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<User> result = userRepository.findAll(pageable);
+
+        List<UserInfoResponse> userList = new ArrayList<>();
+        for (User u : result.getContent()) {
+            userList.add(convertToUserResponse(u));
+        }
+
+        UserListResponse userListResponse = new UserListResponse(
+                result.getNumber() + 1,
+                result.getSize(),
+                result.getTotalPages(),
+                userList
+        );
+
+        return ResponseEntity.ok(
+                new GetAllUserResponse(
+                        ApiStatus.SUCCESS.code,
+                        ApiStatus.SUCCESS.toString().toLowerCase(),
+                        userListResponse
+                )
+        );
+    }
+
+    private UserInfoResponse convertToUserResponse(User user) {
+        List<String> roles = user.getRoles().stream()
+                .map(e -> e.getName().name())
+                .collect(Collectors.toList());
+        return new UserInfoResponse(
+                user.getId(),
+                user.getFullName(),
+                user.getAvatar(),
+                user.getAddress(),
+                user.getPhone(),
+                user.getEmail(),
+                user.getUsername(),
+                user.getStatus(),
+                roles
+        );
     }
 }
