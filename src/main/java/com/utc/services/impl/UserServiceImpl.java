@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -110,7 +111,7 @@ public class UserServiceImpl implements UserService {
                 .username(addUserRequest.getUsername())
                 .password(encoder.encode(addUserRequest.getPassword()))
                 .status(UserStatus.ACTIVE.code)
-                .modifiedBy(ERole.ROLE_USER.name())
+                .modifiedBy(SecurityContextHolder.getContext().getAuthentication().getName())
                 .build();
 
         Set<String> strRoles = addUserRequest.getRole();
@@ -205,7 +206,7 @@ public class UserServiceImpl implements UserService {
         if (updateUserRequest.getStatus() != null) {
             user.setStatus(updateUserRequest.getStatus());
         }
-        user.setModifiedBy(ERole.ROLE_ADMIN.name());
+        user.setModifiedBy(SecurityContextHolder.getContext().getAuthentication().getName());
 
         Set<Role> roles = getRoles(updateUserRequest);
 
