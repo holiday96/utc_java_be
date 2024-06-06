@@ -15,9 +15,10 @@ spring:
 
 utc:
     java:
-        jwtCookieName: utcJava
+        jwtToken: utcJava
         jwtSecret: a21ZQ7Nf0Ek2ZvtOn0UeZDYqN8WfNtO29cfXwV5gy4I=
         jwtExpirationMs: 86400000
+        tokenPrefix: utcJava_
 
 server:
     port: 8080
