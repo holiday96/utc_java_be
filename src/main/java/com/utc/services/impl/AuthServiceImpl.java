@@ -94,7 +94,8 @@ public class AuthServiceImpl implements AuthService {
                     .body(new SigninResponse(
                             ApiStatus.SUCCESS.code,
                             ApiStatus.SUCCESS.toString().toLowerCase(),
-                            userInfoResponse
+                            userInfoResponse,
+                            jwtCookie.getValue()
                     ));
         }
     }

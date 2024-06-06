@@ -9,4 +9,5 @@ public class SigninResponse {
     private Integer status;
     private String message;
     private UserInfoResponse result;
+    private String token;
 }
