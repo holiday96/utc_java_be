@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 
 /**
  * Project_name : UTC_Java
@@ -60,7 +61,7 @@ public class UserController {
     }
 
     @GetMapping("/info/{user_id}")
-    public ResponseEntity<GetUserResponse> getUserById(@PathVariable("user_id") Long userId) {
+    public ResponseEntity<GetUserResponse> getUserById(@PathVariable("user_id") @Positive Long userId) {
         log.info("Request getUserById: user_id={}", userId);
         return userService.getUserById(userId);
     }
