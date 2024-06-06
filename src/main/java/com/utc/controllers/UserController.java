@@ -3,6 +3,7 @@ package com.utc.controllers;
 import com.utc.payload.request.AddUserRequest;
 import com.utc.payload.request.UpdateUserRequest;
 import com.utc.payload.response.GetAllUserResponse;
+import com.utc.payload.response.GetUserResponse;
 import com.utc.payload.response.RestApiResponse;
 import com.utc.services.UserService;
 import org.slf4j.Logger;
@@ -56,5 +57,11 @@ public class UserController {
     ) {
         log.info("Request getUserList: page={}, size={}", page, size);
         return userService.getAllUsers(page, size);
+    }
+
+    @GetMapping("/info/{user_id}")
+    public ResponseEntity<GetUserResponse> getUserById(@PathVariable("user_id") Long userId) {
+        log.info("Request getUserById: user_id={}", userId);
+        return userService.getUserById(userId);
     }
 }

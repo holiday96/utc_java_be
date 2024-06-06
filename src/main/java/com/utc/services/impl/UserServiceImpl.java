@@ -275,6 +275,20 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Override
+    public ResponseEntity<GetUserResponse> getUserById(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotExistsException("User Not Found with user_id: " + userId));
+
+        return ResponseEntity.ok(
+                new GetUserResponse(
+                        ApiStatus.SUCCESS.code,
+                        ApiStatus.SUCCESS.toString().toLowerCase(),
+                        convertToUserResponse(user)
+                )
+        );
+    }
+
     private UserInfoResponse convertToUserResponse(User user) {
         List<String> roles = user.getRoles().stream()
                 .map(e -> e.getName().name())
