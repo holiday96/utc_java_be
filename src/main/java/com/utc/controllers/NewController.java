@@ -59,12 +59,6 @@ public class NewController {
         return newService.update(id, updateNewRequest);
     }
 
-    @GetMapping("/{new_id}")
-    public ResponseEntity<GetNewResponse> getNew(@PathVariable("new_id") @Positive Long id) {
-        log.info("Request getNew: {}", id);
-        return newService.getNewById(id);
-    }
-
     @GetMapping
     public ResponseEntity<GetAllNewsResponse> getNewList(
             @RequestParam(defaultValue = "1") @Min(1) int page,
@@ -72,5 +66,11 @@ public class NewController {
     ) {
         log.info("Request getNewList: page={}, size={}", page, size);
         return newService.getAllNews(PageRequest.of(page - 1, size));
+    }
+
+    @GetMapping("/{new_id}")
+    public ResponseEntity<GetNewResponse> getNewById(@PathVariable("new_id") @Positive Long id) {
+        log.info("Request getNew: {}", id);
+        return newService.getNewById(id);
     }
 }
