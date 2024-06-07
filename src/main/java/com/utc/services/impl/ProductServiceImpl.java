@@ -68,6 +68,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = Product.builder()
                 .userId(user.getId())
                 .title(addProductRequest.getTitle())
+                .content(addProductRequest.getContent())
                 .price(addProductRequest.getPrice())
                 .amount(addProductRequest.getAmount())
                 .unit(addProductRequest.getUnit())
@@ -108,6 +109,9 @@ public class ProductServiceImpl implements ProductService {
 
         if (StringUtils.isNotBlank(updateProductRequest.getTitle())) {
             productCurrent.setTitle(updateProductRequest.getTitle());
+        }
+        if (StringUtils.isNotBlank(updateProductRequest.getContent())) {
+            productCurrent.setContent(updateProductRequest.getContent());
         }
         if (updateProductRequest.getPrice() != null) {
             productCurrent.setPrice(updateProductRequest.getPrice());
@@ -179,6 +183,7 @@ public class ProductServiceImpl implements ProductService {
         return new ProductInfoResponse(
                 product.getId(),
                 product.getTitle(),
+                product.getContent(),
                 product.getPrice(),
                 product.getAmount(),
                 product.getUnit(),

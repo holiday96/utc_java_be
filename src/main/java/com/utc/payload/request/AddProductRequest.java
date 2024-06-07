@@ -1,6 +1,8 @@
 package com.utc.payload.request;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.*;
 import java.util.Set;
@@ -14,22 +16,27 @@ import java.util.Set;
  * Description :
  */
 @Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class AddProductRequest {
     @NotBlank
     @Size(max = 128)
-    private String title;
+    String title;
+
+    @NotBlank
+    @Size(max = 10000)
+    String content;
 
     @Min(1)
     @Max(999999999)
-    private Long price;
+    Long price;
 
     @Min(1)
     @Max(999999999)
-    private Long amount;
+    Long amount;
 
     @NotBlank
     @Size(max = 10)
-    private String unit;
+    String unit;
 
-    private Set<Long> categories;
+    Set<Long> categories;
 }
