@@ -69,7 +69,7 @@ public class User {
     private Integer status;
 
     @Builder.Default
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -80,5 +80,4 @@ public class User {
     private Date createdDate;
 
     private String modifiedBy;
-
 }
