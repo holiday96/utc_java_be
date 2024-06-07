@@ -23,6 +23,8 @@ public class ProductInfoResponse {
 
     String title;
 
+    String content;
+
     Long price;
 
     Long amount;

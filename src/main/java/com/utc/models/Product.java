@@ -39,6 +39,10 @@ public class Product {
     @Size(max = 128)
     private String title;
 
+    @NotBlank
+    @Column(columnDefinition = "text")
+    String content;
+
     @Min(0)
     @Max(999999999)
     private Long price;

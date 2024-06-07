@@ -25,6 +25,9 @@ public class UpdateProductRequest {
     @Size(max = 128)
     String title;
 
+    @Size(max = 10000)
+    String content;
+
     @Min(1)
     @Max(999999999)
     Long price;
