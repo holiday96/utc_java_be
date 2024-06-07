@@ -2,6 +2,7 @@ package com.utc.controllers;
 
 import com.utc.payload.request.AddProductRequest;
 import com.utc.payload.request.AddUserRequest;
+import com.utc.payload.request.UpdateProductRequest;
 import com.utc.payload.request.UpdateUserRequest;
 import com.utc.payload.response.GetAllUserResponse;
 import com.utc.payload.response.GetUserResponse;
@@ -41,5 +42,14 @@ public class ProductController {
     public ResponseEntity<RestApiResponse> addProduct(@Valid @RequestBody AddProductRequest addProductRequest) {
         log.info("Request addProduct: {}", addProductRequest);
         return productService.addProduct(addProductRequest);
+    }
+
+    @PatchMapping("/{product_id}")
+    public ResponseEntity<RestApiResponse> updateProduct(
+            @PathVariable("product_id") Long productId,
+            @Valid @RequestBody UpdateProductRequest updateProductRequest
+    ) {
+        log.info("Request updateProduct: {}", updateProductRequest);
+        return productService.updateProduct(productId, updateProductRequest);
     }
 }
