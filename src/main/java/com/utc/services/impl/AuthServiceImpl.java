@@ -19,9 +19,9 @@ import com.utc.services.UserService;
 import com.utc.utils.JwtUtils;
 import com.utc.utils.MessageUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,6 +44,9 @@ import java.util.Set;
  */
 @Service
 public class AuthServiceImpl implements AuthService {
+
+    @Value("${utc.java.jwtToken}")
+    private String jwtToken;
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -88,13 +91,16 @@ public class AuthServiceImpl implements AuthService {
 
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-            ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+            String tokenValue = jwtUtils.generateJwt(userDetails);
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(jwtToken, tokenValue);
 
-            return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString())
+            return ResponseEntity.ok().headers(headers)
                     .body(new SigninResponse(
                             ApiStatus.SUCCESS.code,
                             ApiStatus.SUCCESS.toString().toLowerCase(),
-                            userInfoResponse
+                            userInfoResponse,
+                            tokenValue
                     ));
         }
     }
@@ -137,8 +143,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public ResponseEntity<RestApiResponse> logoutUser() {
-        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString())
+        HttpHeaders headers = new HttpHeaders();
+        headers.set(jwtToken, "");
+
+//        ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
+        return ResponseEntity.ok().headers(headers)
                 .body(new RestApiResponse(
                         ApiStatus.SUCCESS.code,
                         ApiStatus.SUCCESS.toString().toLowerCase()

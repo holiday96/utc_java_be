@@ -34,26 +34,42 @@ public class JwtUtils {
     @Value("${utc.java.jwtExpirationMs}")
     private int jwtExpirationMs;
 
-    @Value("${utc.java.jwtCookieName}")
-    private String jwtCookie;
+    @Value("${utc.java.jwtToken}")
+    private String jwtToken;
 
-    public String getJwtFromCookies(HttpServletRequest request) {
-        Cookie cookie = WebUtils.getCookie(request, jwtCookie);
-        if (cookie != null) {
-            return cookie.getValue();
+    @Value("${utc.java.tokenPrefix}")
+    private String tokenPrefix;
+
+//    public String getJwtFromCookies(HttpServletRequest request) {
+//        Cookie cookie = WebUtils.getCookie(request, jwtCookie);
+//        if (cookie != null) {
+//            return cookie.getValue();
+//        } else {
+//            return null;
+//        }
+//    }
+
+    public String getJwtFromHeader(HttpServletRequest request) {
+        String headerValue = request.getHeader(jwtToken);
+        if (headerValue != null && headerValue.startsWith(tokenPrefix)) {
+            return headerValue.substring(tokenPrefix.length());
         } else {
             return null;
         }
     }
 
-    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
-        String jwt = generateTokenFromUsername(userPrincipal.getUsername());
-        return ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).build();
+//    public ResponseCookie generateJwtCookie(UserDetailsImpl userPrincipal) {
+//        String jwt = generateTokenFromUsername(userPrincipal.getUsername());
+//        return ResponseCookie.from(jwtCookie, jwt).path("/api").maxAge(24 * 60 * 60).httpOnly(true).build();
+//    }
+
+    public String generateJwt(UserDetailsImpl userPrincipal) {
+        return tokenPrefix + generateTokenFromUsername(userPrincipal.getUsername());
     }
 
-    public ResponseCookie getCleanJwtCookie() {
-        return ResponseCookie.from(jwtCookie, null).path("/api").build();
-    }
+//    public ResponseCookie getCleanJwtCookie() {
+//        return ResponseCookie.from(jwtCookie, null).path("/api").build();
+//    }
 
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key()).build()
