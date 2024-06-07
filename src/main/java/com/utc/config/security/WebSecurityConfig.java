@@ -68,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(
                         "/api/users/info/**",
                         "/api/news/**",
+                        "/api/products/user/**",
                         "/api/test/**"
                 ).permitAll()
                 .anyRequest().authenticated();

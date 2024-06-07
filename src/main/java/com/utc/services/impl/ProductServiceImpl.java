@@ -1,18 +1,17 @@
 package com.utc.services.impl;
 
 import com.utc.contants.ApiStatus;
-import com.utc.contants.ERole;
 import com.utc.contants.EStatus;
-import com.utc.controllers.AuthController;
 import com.utc.exception.ResourceNotExistsException;
 import com.utc.exception.ValidateException;
 import com.utc.models.Category;
 import com.utc.models.Product;
-import com.utc.models.Role;
 import com.utc.models.User;
 import com.utc.payload.request.AddProductRequest;
 import com.utc.payload.request.UpdateProductRequest;
-import com.utc.payload.request.UpdateUserRequest;
+import com.utc.payload.response.GetAllProductResponse;
+import com.utc.payload.response.ProductInfoResponse;
+import com.utc.payload.response.ProductListResponse;
 import com.utc.payload.response.RestApiResponse;
 import com.utc.repository.CategoryRepository;
 import com.utc.repository.ProductRepository;
@@ -20,17 +19,19 @@ import com.utc.repository.UserRepository;
 import com.utc.services.ProductService;
 import com.utc.utils.MessageUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Project_name : UTC_Java
@@ -144,6 +145,45 @@ public class ProductServiceImpl implements ProductService {
                         ApiStatus.SUCCESS.code,
                         ApiStatus.SUCCESS.toString().toLowerCase()
                 )
+        );
+    }
+
+    @Override
+    public ResponseEntity<GetAllProductResponse> getProductListByUserId(Long userId, PageRequest pageRequest) {
+        Page<Product> result = productRepository.findAllByUserId(userId, pageRequest);
+
+        List<ProductInfoResponse> productList = result.getContent()
+                .stream()
+                .map(this::convertToInfoResponse)
+                .collect(Collectors.toList());
+
+        ProductListResponse productListResponse = new ProductListResponse(
+                result.getNumber() + 1,
+                result.getSize(),
+                result.getTotalPages(),
+                productList
+        );
+        return ResponseEntity.ok(
+                new GetAllProductResponse(
+                        ApiStatus.SUCCESS.code,
+                        ApiStatus.SUCCESS.toString().toLowerCase(),
+                        productListResponse
+                )
+        );
+    }
+
+    private ProductInfoResponse convertToInfoResponse(Product product) {
+        List<Long> categories = product.getCategories().stream()
+                .map(Category::getId)
+                .collect(Collectors.toList());
+        return new ProductInfoResponse(
+                product.getId(),
+                product.getTitle(),
+                product.getPrice(),
+                product.getAmount(),
+                product.getUnit(),
+                product.getStatus(),
+                categories
         );
     }
 }
