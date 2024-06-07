@@ -1,24 +1,20 @@
 package com.utc.controllers;
 
 import com.utc.payload.request.AddProductRequest;
-import com.utc.payload.request.AddUserRequest;
 import com.utc.payload.request.UpdateProductRequest;
-import com.utc.payload.request.UpdateUserRequest;
-import com.utc.payload.response.GetAllUserResponse;
-import com.utc.payload.response.GetUserResponse;
+import com.utc.payload.response.GetAllProductResponse;
 import com.utc.payload.response.RestApiResponse;
 import com.utc.services.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Positive;
 
 /**
  * Project_name : UTC_Java
@@ -51,5 +47,15 @@ public class ProductController {
     ) {
         log.info("Request updateProduct: {}", updateProductRequest);
         return productService.updateProduct(productId, updateProductRequest);
+    }
+
+    @GetMapping("/user/{user_id}")
+    public ResponseEntity<GetAllProductResponse> getProductListByUserId(
+            @PathVariable("user_id") Long userId,
+            @RequestParam(defaultValue = "1") @Min(1) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size
+    ) {
+        log.info("Request getProductListByUserId: page={}, size={}", page, size);
+        return productService.getProductListByUserId(userId, PageRequest.of(page - 1, size));
     }
 }
