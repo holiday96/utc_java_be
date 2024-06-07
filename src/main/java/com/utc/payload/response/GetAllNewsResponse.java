@@ -16,5 +16,5 @@ import lombok.Data;
 public class GetAllNewsResponse {
     private Integer status;
     private String message;
-    private NewsListResponse result;
+    private NewListResponse result;
 }

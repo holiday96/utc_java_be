@@ -7,6 +7,10 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Date;
 /**
  * Project_name : UTC_Java
@@ -20,19 +24,30 @@ import java.util.Date;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
+@Accessors(chain = true, fluent = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Accessors(chain = true)
-public class News {
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "news")
+public class New {
+
     @Id
     @Generated
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    Long id;
 
+    Long userId;
+
+    @NotBlank
+    @Size(max = 128)
     String title;
 
+    @NotBlank
+    @Column(columnDefinition = "text")
     String content;
 
+    @Min(-1)
+    @Max(1)
+    @Column(columnDefinition = "tinyint", length = 1)
     Integer status;
 
     @CreatedDate
@@ -40,8 +55,4 @@ public class News {
     private Date createdDate;
 
     private String modifiedBy;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", nullable = false)
-    User user;
 }

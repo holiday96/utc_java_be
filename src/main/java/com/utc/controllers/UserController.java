@@ -45,7 +45,10 @@ public class UserController {
 
     @PatchMapping("/{user_id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<RestApiResponse> updateUser(@PathVariable("user_id") Long userId, @Valid @RequestBody UpdateUserRequest updateUserRequest) {
+    public ResponseEntity<RestApiResponse> updateUser(
+            @PathVariable("user_id") Long userId,
+            @Valid @RequestBody UpdateUserRequest updateUserRequest
+    ) {
         log.info("Request updateUser: {}", updateUserRequest);
         return userService.updateUser(userId, updateUserRequest);
     }

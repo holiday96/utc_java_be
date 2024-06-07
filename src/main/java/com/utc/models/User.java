@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -81,7 +80,4 @@ public class User {
     private Date createdDate;
 
     private String modifiedBy;
-
-    @OneToMany(mappedBy = "id")
-    private List<News> news;
 }

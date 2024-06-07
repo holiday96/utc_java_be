@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import javax.validation.constraints.NotBlank;
-
+import javax.validation.constraints.Size;
 
 /**
  * Project_name : UTC_Java
@@ -16,9 +16,13 @@ import javax.validation.constraints.NotBlank;
  */
 @Data
 @Accessors(chain = true)
-public class UpdateNewsRequest {
+public class CreateNewRequest {
+
     @NotBlank
-    String title;
+    @Size(max = 128)
+    private String title;
+
     @NotBlank
-    String content;
+    @Size(max = 10000)
+    private String content;
 }

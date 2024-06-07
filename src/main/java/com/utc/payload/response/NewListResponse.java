@@ -3,6 +3,7 @@ package com.utc.payload.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
 /**
  * Project_name : UTC_Java
  *
@@ -13,12 +14,9 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class NewsInfoResponse {
-    Integer id;
-
-    String title;
-
-    String content;
-
-    Integer status;
+public class NewListResponse {
+    private Integer pageNumber;
+    private Integer pageSize;
+    private Integer totalPage;
+    private List<NewInfoResponse> newsList;
 }

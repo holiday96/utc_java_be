@@ -1,5 +1,6 @@
 package com.utc.payload.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -12,9 +13,9 @@ import lombok.experimental.Accessors;
  * Description :
  */
 @Data
-@Accessors(chain = true)
-public class GetNewsResponse {
+@AllArgsConstructor
+public class GetNewResponse {
     private Integer status;
     private String message;
-    private NewsInfoResponse result;
+    private NewInfoResponse result;
 }

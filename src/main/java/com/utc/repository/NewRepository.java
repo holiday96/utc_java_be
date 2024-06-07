@@ -1,6 +1,6 @@
 package com.utc.repository;
 
-import com.utc.models.News;
+import com.utc.models.New;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -17,10 +17,8 @@ import java.util.Optional;
  * Description :
  */
 @Repository
-public interface NewsRepository extends JpaRepository<News, Integer> {
-    Page<News> findAllByUser_Id(Long userId, Pageable pageable);
+public interface NewRepository extends JpaRepository<New, Long> {
+    Page<New> findAllByUserId(Long userId, Pageable pageable);
 
-    Optional<News> findByTitle(String title);
-
-    Optional<News> findByIdAndStatus(Integer id, Integer code);
+    Optional<New> findByTitle(String title);
 }
