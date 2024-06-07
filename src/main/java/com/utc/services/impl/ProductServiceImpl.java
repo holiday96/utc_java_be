@@ -9,10 +9,7 @@ import com.utc.models.Product;
 import com.utc.models.User;
 import com.utc.payload.request.AddProductRequest;
 import com.utc.payload.request.UpdateProductRequest;
-import com.utc.payload.response.GetAllProductResponse;
-import com.utc.payload.response.ProductInfoResponse;
-import com.utc.payload.response.ProductListResponse;
-import com.utc.payload.response.RestApiResponse;
+import com.utc.payload.response.*;
 import com.utc.repository.CategoryRepository;
 import com.utc.repository.ProductRepository;
 import com.utc.repository.UserRepository;
@@ -84,7 +81,7 @@ public class ProductServiceImpl implements ProductService {
                 Category category = categoryRepository.findById(categoryId)
                         .orElseThrow(() -> new ValidateException(
                                 ApiStatus.BAD_REQUEST.toString().toLowerCase(),
-                                MessageUtils.getProperty(messageSource, "category_not_found")
+                                String.format(MessageUtils.getProperty(messageSource, "category_not_found"), categoryId)
                         ));
                 categories.add(category);
             });
@@ -172,6 +169,22 @@ public class ProductServiceImpl implements ProductService {
                         ApiStatus.SUCCESS.code,
                         ApiStatus.SUCCESS.toString().toLowerCase(),
                         productListResponse
+                )
+        );
+    }
+
+    @Override
+    public ResponseEntity<GetProductResponse> getProductById(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotExistsException(
+                        String.format(MessageUtils.getProperty(messageSource, "product_not_found"), id)
+                ));
+
+        return ResponseEntity.ok(
+                new GetProductResponse(
+                        ApiStatus.SUCCESS.code,
+                        ApiStatus.SUCCESS.toString().toLowerCase(),
+                        convertToInfoResponse(product)
                 )
         );
     }

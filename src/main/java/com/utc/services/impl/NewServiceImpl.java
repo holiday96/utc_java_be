@@ -148,7 +148,9 @@ public class NewServiceImpl implements NewService {
     @Override
     public ResponseEntity<RestApiResponse> update(Long newId, UpdateNewRequest updateNewRequest) {
         New newCurrent = newRepository.findById(newId)
-                .orElseThrow(() -> new ResourceNotExistsException("New not found with id: " + newId));
+                .orElseThrow(() -> new ResourceNotExistsException(
+                        String.format(MessageUtils.getProperty(messageSource, "new_not_found"), newId)
+                ));
 
         if (StringUtils.isNotBlank(updateNewRequest.getTitle())) {
             newCurrent.title(updateNewRequest.getTitle());
@@ -181,7 +183,9 @@ public class NewServiceImpl implements NewService {
                         aNew.content(),
                         aNew.status())
                 )
-                .orElseThrow(() -> new ResourceNotExistsException(String.format("News with id: %s not exist !", id)));
+                .orElseThrow(() -> new ResourceNotExistsException(
+                        String.format(MessageUtils.getProperty(messageSource, "new_not_found"), id)
+                ));
 
         return ResponseEntity.ok(
                 new GetNewResponse(
