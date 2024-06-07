@@ -3,6 +3,7 @@ package com.utc.controllers;
 import com.utc.payload.request.AddProductRequest;
 import com.utc.payload.request.UpdateProductRequest;
 import com.utc.payload.response.GetAllProductResponse;
+import com.utc.payload.response.GetProductResponse;
 import com.utc.payload.response.RestApiResponse;
 import com.utc.services.ProductService;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 
 /**
  * Project_name : UTC_Java
@@ -57,5 +59,11 @@ public class ProductController {
     ) {
         log.info("Request getProductListByUserId: page={}, size={}", page, size);
         return productService.getProductListByUserId(userId, PageRequest.of(page - 1, size));
+    }
+
+    @GetMapping("/info/{product_id}")
+    public ResponseEntity<GetProductResponse> getProductById(@PathVariable("product_id") @Positive Long id) {
+        log.info("Request getProductById: {}", id);
+        return productService.getProductById(id);
     }
 }
