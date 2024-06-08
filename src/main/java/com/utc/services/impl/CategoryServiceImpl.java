@@ -118,6 +118,14 @@ public class CategoryServiceImpl implements CategoryService {
                 ));
 
         if (StringUtils.isNotBlank(updateCategoryRequest.getName())) {
+            categoryRepository.findByUserIdAndName(cateCurrent.getUserId(), updateCategoryRequest.getName())
+                    .ifPresent(cate -> {
+                        throw new ValidateException(
+                                ApiStatus.BAD_REQUEST.toString().toLowerCase(),
+                                MessageUtils.getProperty(messageSource, "category_already_exist")
+                        );
+                    });
+
             cateCurrent.setName(updateCategoryRequest.getName());
         }
         if (updateCategoryRequest.getStatus() != null) {
