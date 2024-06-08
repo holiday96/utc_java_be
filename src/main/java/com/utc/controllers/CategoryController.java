@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -55,12 +56,14 @@ public class CategoryController {
         return categoryService.update(id, updateCategoryRequest);
     }
 
-    @GetMapping("/info")
-    public ResponseEntity<GetAllCategoryResponse> getCategoryList(
+    @GetMapping("/info/{user_id}")
+    public ResponseEntity<GetAllCategoryResponse> getCategoryListByUserId(
+            @PathVariable("user_id") Long userId,
             @RequestParam(defaultValue = "1") @Min(1) int page,
             @RequestParam(defaultValue = "100") @Min(1) @Max(100) int size
     ) {
-        log.info("Request getCategoryList: page={}, size={}", page, size);
-        return categoryService.getCategoryList(PageRequest.of(page - 1, size));
+        log.info("Request getCategoryList: userId={}, page={}, size={}", userId, page, size);
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return categoryService.getCategoryListByUserId(userId, pageable);
     }
 }

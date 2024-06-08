@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -52,8 +52,8 @@ public class CategoryServiceImpl implements CategoryService {
     private final UserRepository userRepository;
 
     @Override
-    public ResponseEntity<GetAllCategoryResponse> getCategoryList(PageRequest pageRequest) {
-        Page<Category> result = categoryRepository.findAll(pageRequest);
+    public ResponseEntity<GetAllCategoryResponse> getCategoryListByUserId(Long userId, Pageable pageable) {
+        Page<Category> result = categoryRepository.findByUserId(userId, pageable);
 
         List<CategoryInfoResponse> categoryList = result.getContent()
                 .stream()

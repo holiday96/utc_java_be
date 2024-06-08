@@ -4,7 +4,7 @@ import com.utc.payload.request.CreateCategoryRequest;
 import com.utc.payload.request.UpdateCategoryRequest;
 import com.utc.payload.response.GetAllCategoryResponse;
 import com.utc.payload.response.RestApiResponse;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
  * Description :
  */
 public interface CategoryService {
-    ResponseEntity<GetAllCategoryResponse> getCategoryList(PageRequest pageRequest);
+    ResponseEntity<GetAllCategoryResponse> getCategoryListByUserId(Long userId, Pageable pageable);
 
     ResponseEntity<RestApiResponse> create(CreateCategoryRequest createCategoryRequest);
 
