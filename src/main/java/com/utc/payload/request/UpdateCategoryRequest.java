@@ -2,7 +2,6 @@ package com.utc.payload.request;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Max;
@@ -13,20 +12,17 @@ import javax.validation.constraints.Size;
 /**
  * Project_name : UTC_Java
  *
- * @author : datmt
+ * @author : XuShiTa
  * @version : 1.0
- * @since : 6.6.2024
+ * @since : 8.6.2024
  * Description :
  */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateNewRequest {
+public class UpdateCategoryRequest {
 
-    @Size(max = 128)
-    String title;
-
-    @Size(max = 10000)
-    String content;
+    @Size(max = 64)
+    String name;
 
     @Min(-1)
     @Max(1)
