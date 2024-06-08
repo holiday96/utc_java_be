@@ -15,8 +15,6 @@ import com.utc.services.NewService;
 import com.utc.utils.MessageUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -42,7 +40,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class NewServiceImpl implements NewService {
 
-    private static final Logger log = LoggerFactory.getLogger(NewServiceImpl.class);
     @Autowired
     private final MessageSource messageSource;
 
