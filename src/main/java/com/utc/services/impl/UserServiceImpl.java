@@ -208,9 +208,10 @@ public class UserServiceImpl implements UserService {
         }
         user.setModifiedBy(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        Set<Role> roles = getRoles(updateUserRequest);
-
-        user.setRoles(roles);
+        if (updateUserRequest.getRole() != null) {
+            Set<Role> roles = getRoles(updateUserRequest);
+            user.setRoles(roles);
+        }
         userRepository.save(user);
 
         return ResponseEntity.ok(
