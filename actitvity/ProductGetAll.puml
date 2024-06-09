@@ -1,0 +1,11 @@
+@startuml
+start
+: sử dụng repository để truy vấn toàn bộ product trong database theo userId truyền vào \n với pageable để phân trang;
+if ( userId truyền vào = null ) is (yes) then
+  :trả ra lỗi 400 tham số truyền vào không hợp lệ;
+    stop
+endif
+: mapping dữ liệu trả ra từ database cho DTO response;
+: trả ra dữ liệu cho người dùng với mã lỗi 200 SUCCESS;
+stop
+@enduml

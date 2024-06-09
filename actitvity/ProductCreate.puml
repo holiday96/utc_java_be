@@ -1,0 +1,23 @@
+@startuml
+start
+: kiểm tra dữ liệu đầu vào với \n - title: không được để trống, giới hạn 128 ký tự \n - content: không được để trống , giới hạn 10000 ký tự \n - price: tối thiểu 1 tối đa 999999999 \n - amount:  tối thiểu 1 tối đa 999999999 \n - unit: không được để trống, tối da 10 ký tự ;
+   if (kiểm tra lỗi) is (yes) then
+     : trả ra lỗi 400 tham số truyền vào không hợp lệ;
+     stop
+   endif
+ : truy vấn thông tin user tạo product với username \n đăng nhập lấy từ SecurityContextHolder;
+ if (Nếu không có thông tin trong database) is (yes) then
+   :trả ra lỗi 404 không tìm thấy user;
+ stop
+ endif
+ :tạo mới product với thông tin truyền vào;
+ :truy vấn kiểm tra category truyền vào có tồn tại trong database không;
+ if (nếu không có dữ liệu) is (yes) then
+   : trả ra lỗi 404 không tìm thấy danh mục;
+   stop
+ else (no)
+  : thêm danh mục cho sản phẩm;
+ endif
+ : lưu thông tin sản phẩm mới vào database \n và trả ra mã lỗi 200 SUCCESS;
+stop
+@enduml

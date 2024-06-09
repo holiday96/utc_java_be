@@ -1,0 +1,17 @@
+@startuml
+start
+: truy vấn người dùng theo tên \n đăng nhập trong bảng user;
+if (Nếu người dùng tồn tại với \n trạng thái INACTIVE (0)) is (yes) then
+  : trả ra lỗi 403 user không có \n quyền đăng nhập;
+  stop
+else if (Nếu người dùng tồn tại với \n trạng thái BLOCKED (-1))
+  : trả ra lỗi 403 user không có \n quyền đăng nhập;
+    stop
+else
+   : sử dụng authenticationManager để authenticate \n với UsernamePasswordAuthenticationToken \n là tên đăng nhập và mật khẩu ;
+   : setAuthentication cho SecurityContextHolder \n bằng Authentication vừa được tạo ở trên;
+   : generate mã jwt và set vào header response;
+   : trả ra thông tin người dùng đăng nhập với mã lỗi 200 SUCCESS;
+endif
+stop
+@enduml

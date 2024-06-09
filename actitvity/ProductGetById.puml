@@ -1,0 +1,11 @@
+@startuml
+start
+: truy vấn product với id truyền vào;
+if (không tìm thấy product) is (yes) then
+  :trả ra mã lỗi 404 product not found;
+  stop
+endif
+: mapping dữ liệu trả ra từ database cho DTO response;
+: trả ra dữ liệu cho người dùng với mã lỗi 200 SUCCESS;
+stop
+@enduml

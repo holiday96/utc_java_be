@@ -1,0 +1,52 @@
+@startuml
+start
+if (Nếu quyền user thực thi api không phải ADMIN) is (yes) then
+  :trả ra mã lỗi 403 không có quyền tạo mới;
+  stop
+endif
+: kiểm tra dữ liệu đầu vào với \n - fullName: không được để trống, giới hạn 64 ký tự \n - address: không được để trống , giới hạn 255 ký tự \n - phone: không được để trống, giới hạn 15 ký tự, định dạnh số điện thoại \n - email không được để trống, giới hạn 50 ký tự, định dạng email \n - username: không được để trống, tối thiểu 3 ký tự và tối đã 20 ký tự \n - password: không được để trống, tối thiểu 6 ký tự tối đa 40 ký tự ;
+   if (kiểm tra lỗi)  then
+     : trả ra lỗi 400 tham số truyền vào không hợp lệ;
+     stop
+   endif
+: truy vấn bảng user để tìm kiếm theo id truyền vào;
+if (nếu không tồn tại ) is (yes) then
+  :trả ra lỗi 404 không tìm thấy user ;
+  stop
+endif
+ : truy vấn bảng user với username truyền vào;
+ if (đã tồn tại) is (yes) then
+   :trả ra lỗi 400 username đã tồn tại;
+   stop
+ endif
+  : truy vấn bảng user với số điện thoại truyền vào;
+    if (đã tồn tại) is (yes) then
+    :trả ra lỗi 400 số điện thoại đã tồn tại;
+    stop
+    endif
+   : truy vấn bảng user với email truyền vào;
+   if (đã tồn tại) is (yes) then
+     :trả ra lỗi 400 email đã tồn tại;
+     stop
+   endif
+   : tạo user mới với thông tin truyền vào + mã hóa mật khẩu;
+    : kiểm tra quyền truyền vào;
+       if (nếu không có) is (yes) then
+         :truy vấn bảng role tìm kiếm ROLE_USER;
+         if (nếu không có) is (yes) then
+           :trả ra lỗi 400 không tìm thấy role;
+         stop
+         else (no)
+           : set quyền ROLE_USER cho user mới ;
+         endif
+       else (yes)
+        : kiểm tra quyền truyền vào trong bảng ROLE;
+        if (nếu không có) is (yes) then
+          :trả ra lỗi 400 không tìm thấy role;
+        else (no)
+          : set quyền cho user;
+        endif
+       endif
+       : lưu thông tin user mới vào cơ sở dữ liệu;
+stop
+@enduml

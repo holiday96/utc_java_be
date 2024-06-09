@@ -1,0 +1,5 @@
+@startuml
+start
+: xóa header với key chứa mã jwt đăng nhập và trả ra mã lỗi 200 SUCCESS cho người dùng;
+stop
+@enduml

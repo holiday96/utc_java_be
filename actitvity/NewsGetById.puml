@@ -1,0 +1,15 @@
+@startuml
+start
+if (nếu Id truyền vào không có) is (yes) then
+  :trả ra mã lỗi 400 tham số không hợp lệ;
+  stop
+endif
+: truy vấn bản tin với id truyền vào;
+if (không tìm thấy bản tin) is (yes) then
+  :trả ra mã lỗi 404 user not found;
+  stop
+endif
+: mapping dữ liệu trả ra từ database cho DTO response;
+: trả ra dữ liệu cho người dùng với mã lỗi 200 SUCCESS;
+stop
+@enduml

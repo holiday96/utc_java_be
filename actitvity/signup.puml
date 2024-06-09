@@ -1,0 +1,16 @@
+@startuml
+start
+: truy vấn vào cơ sở dữ liệu tìm kiếm tên đăng nhập \n mà người dùng đăng ký ;
+if (tên đăng nhập đã tồn tại trong hệ thống) then (yes)
+  :trả ra lỗi 400;
+  stop
+endif
+: truy vấn vào cơ sở dũ liệu tìm kiếm quyền người dùng ;
+if (Quyền người dùng nhập vào không tìm thấy trong cơ sở dữ liệu) then (yes)
+  :trả ra lỗi 400;
+  stop
+endif
+: tạo người dùng mới;
+: lưu vào cơ sở dữ liệu;
+stop
+@enduml
