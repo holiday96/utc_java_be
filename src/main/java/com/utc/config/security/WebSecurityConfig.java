@@ -69,7 +69,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/users/info/**",
                         "/api/news/**",
                         "/api/products/user/**",
-                        "/api/products/info/**",
+                        "/api/products/info**",
                         "/api/categories/info/**",
                         "/api/test/**"
                 ).permitAll()
