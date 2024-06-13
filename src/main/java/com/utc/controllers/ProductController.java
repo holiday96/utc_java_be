@@ -51,6 +51,15 @@ public class ProductController {
         return productService.updateProduct(productId, updateProductRequest);
     }
 
+    @GetMapping("/info")
+    public ResponseEntity<GetAllProductResponse> getAllProduct(
+            @RequestParam(defaultValue = "1") @Min(1) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size
+    ) {
+        log.info("Request getAllProduct: page={}, size={}", page, size);
+        return productService.getAllProduct(PageRequest.of(page - 1, size));
+    }
+
     @GetMapping("/user/{user_id}")
     public ResponseEntity<GetAllProductResponse> getProductListByUserId(
             @PathVariable("user_id") Long userId,

@@ -150,6 +150,30 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ResponseEntity<GetAllProductResponse> getAllProduct(PageRequest pageRequest) {
+        Page<Product> result = productRepository.findAll(pageRequest);
+
+        List<ProductInfoResponse> productList = result.getContent()
+                .stream()
+                .map(this::convertToInfoResponse)
+                .collect(Collectors.toList());
+
+        ProductListResponse productListResponse = new ProductListResponse(
+                result.getNumber() + 1,
+                result.getSize(),
+                result.getTotalPages(),
+                productList
+        );
+        return ResponseEntity.ok(
+                new GetAllProductResponse(
+                        ApiStatus.SUCCESS.code,
+                        ApiStatus.SUCCESS.toString().toLowerCase(),
+                        productListResponse
+                )
+        );
+    }
+
+    @Override
     public ResponseEntity<GetAllProductResponse> getProductListByUserId(Long userId, PageRequest pageRequest) {
         Page<Product> result = productRepository.findAllByUserId(userId, pageRequest);
 

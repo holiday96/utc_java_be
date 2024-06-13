@@ -3,7 +3,6 @@ package com.utc.services;
 import com.utc.payload.request.AddProductRequest;
 import com.utc.payload.request.UpdateProductRequest;
 import com.utc.payload.response.GetAllProductResponse;
-import com.utc.payload.response.GetNewResponse;
 import com.utc.payload.response.GetProductResponse;
 import com.utc.payload.response.RestApiResponse;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +20,8 @@ public interface ProductService {
     ResponseEntity<RestApiResponse> addProduct(AddProductRequest addProductRequest);
 
     ResponseEntity<RestApiResponse> updateProduct(Long productId, UpdateProductRequest updateProductRequest);
+
+    ResponseEntity<GetAllProductResponse> getAllProduct(PageRequest pageRequest);
 
     ResponseEntity<GetAllProductResponse> getProductListByUserId(Long userId, PageRequest pageRequest);
 
