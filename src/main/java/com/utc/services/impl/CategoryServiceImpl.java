@@ -8,10 +8,7 @@ import com.utc.models.Category;
 import com.utc.models.User;
 import com.utc.payload.request.CreateCategoryRequest;
 import com.utc.payload.request.UpdateCategoryRequest;
-import com.utc.payload.response.CategoryInfoResponse;
-import com.utc.payload.response.CategoryListResponse;
-import com.utc.payload.response.GetAllCategoryResponse;
-import com.utc.payload.response.RestApiResponse;
+import com.utc.payload.response.*;
 import com.utc.repository.CategoryRepository;
 import com.utc.repository.UserRepository;
 import com.utc.services.CategoryService;
@@ -75,6 +72,27 @@ public class CategoryServiceImpl implements CategoryService {
                         ApiStatus.SUCCESS.code,
                         ApiStatus.SUCCESS.toString().toLowerCase(),
                         categoryListResponse
+                )
+        );
+    }
+
+    @Override
+    public ResponseEntity<GetCategoryResponse> getCategory(Long categoryId) {
+        CategoryInfoResponse result = categoryRepository.findById(categoryId)
+                .map(item -> new CategoryInfoResponse(
+                        item.getId(),
+                        item.getName(),
+                        item.getStatus())
+                )
+                .orElseThrow(() -> new ResourceNotExistsException(
+                        String.format(MessageUtils.getProperty(messageSource, "category_not_found"), categoryId)
+                ));
+
+        return ResponseEntity.ok(
+                new GetCategoryResponse(
+                        ApiStatus.SUCCESS.code,
+                        ApiStatus.SUCCESS.toString().toLowerCase(),
+                        result
                 )
         );
     }

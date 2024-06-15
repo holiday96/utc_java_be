@@ -4,6 +4,7 @@ package com.utc.controllers;
 import com.utc.payload.request.CreateCategoryRequest;
 import com.utc.payload.request.UpdateCategoryRequest;
 import com.utc.payload.response.GetAllCategoryResponse;
+import com.utc.payload.response.GetCategoryResponse;
 import com.utc.payload.response.RestApiResponse;
 import com.utc.services.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,5 +65,13 @@ public class CategoryController {
         log.info("Request getCategoryList: userId={}, page={}, size={}", userId, page, size);
         Pageable pageable = PageRequest.of(page - 1, size);
         return categoryService.getCategoryListByUserId(userId, pageable);
+    }
+
+    @GetMapping("/info/cate/{category_id}")
+    public ResponseEntity<GetCategoryResponse> getCategory(
+            @PathVariable("category_id") Long categoryId
+    ) {
+        log.info("Request getCategory: categoryId={}", categoryId);
+        return categoryService.getCategory(categoryId);
     }
 }
