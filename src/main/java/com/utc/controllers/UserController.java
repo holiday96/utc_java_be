@@ -44,7 +44,6 @@ public class UserController {
     }
 
     @PatchMapping("/{user_id}")
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<RestApiResponse> updateUser(
             @PathVariable("user_id") Long userId,
             @Valid @RequestBody UpdateUserRequest updateUserRequest
