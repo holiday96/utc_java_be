@@ -25,6 +25,8 @@ public class ProductInfoResponse {
 
     String content;
 
+    String image;
+
     Long price;
 
     Long amount;
@@ -34,4 +36,6 @@ public class ProductInfoResponse {
     Integer status;
 
     List<Long> categories;
+
+    Long userId;
 }

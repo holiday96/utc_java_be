@@ -43,6 +43,9 @@ public class Product {
     @Column(columnDefinition = "text")
     String content;
 
+    @NotBlank
+    String image;
+
     @Min(0)
     @Max(999999999)
     private Long price;

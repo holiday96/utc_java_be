@@ -66,6 +66,7 @@ public class ProductServiceImpl implements ProductService {
                 .userId(user.getId())
                 .title(addProductRequest.getTitle())
                 .content(addProductRequest.getContent())
+                .image(addProductRequest.getImage())
                 .price(addProductRequest.getPrice())
                 .amount(addProductRequest.getAmount())
                 .unit(addProductRequest.getUnit())
@@ -109,6 +110,9 @@ public class ProductServiceImpl implements ProductService {
         }
         if (StringUtils.isNotBlank(updateProductRequest.getContent())) {
             productCurrent.setContent(updateProductRequest.getContent());
+        }
+        if (StringUtils.isNotBlank(updateProductRequest.getImage())) {
+            productCurrent.setImage(updateProductRequest.getImage());
         }
         if (updateProductRequest.getPrice() != null) {
             productCurrent.setPrice(updateProductRequest.getPrice());
@@ -221,11 +225,13 @@ public class ProductServiceImpl implements ProductService {
                 product.getId(),
                 product.getTitle(),
                 product.getContent(),
+                product.getImage(),
                 product.getPrice(),
                 product.getAmount(),
                 product.getUnit(),
                 product.getStatus(),
-                categories
+                categories,
+                product.getUserId()
         );
     }
 }

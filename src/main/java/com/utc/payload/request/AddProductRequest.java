@@ -26,6 +26,10 @@ public class AddProductRequest {
     @Size(max = 10000)
     String content;
 
+    @NotBlank
+    @Size(max = 255)
+    String image;
+
     @Min(1)
     @Max(999999999)
     Long price;
