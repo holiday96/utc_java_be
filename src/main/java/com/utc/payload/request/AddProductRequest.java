@@ -39,7 +39,7 @@ public class AddProductRequest {
     Long amount;
 
     @NotBlank
-    @Size(max = 10)
+    @Size(max = 100)
     String unit;
 
     Set<Long> categories;
