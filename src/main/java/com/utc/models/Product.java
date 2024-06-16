@@ -54,7 +54,7 @@ public class Product {
     @Max(999999999)
     private Long amount;
 
-    @Size(max = 10)
+    @Size(max = 100)
     private String unit;
 
     @Min(-1)
