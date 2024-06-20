@@ -17,4 +17,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> findAllByUserId(Long userId, Pageable pageable);
+    Page<Product> findByPriceBetween(Long minPrice, Long maxPrice, Pageable pageable);
+    Page<Product> findByPriceGreaterThanEqual(Long minPrice, Pageable pageable);
+    Page<Product> findByPriceLessThanEqual(Long maxPrice, Pageable pageable);
 }

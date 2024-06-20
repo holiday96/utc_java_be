@@ -154,8 +154,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ResponseEntity<GetAllProductResponse> getAllProduct(PageRequest pageRequest) {
-        Page<Product> result = productRepository.findAll(pageRequest);
+    public ResponseEntity<GetAllProductResponse> getAllProduct(PageRequest pageRequest, Long minPrice, Long maxPrice) {
+        Page<Product> result;
+
+        if (minPrice != null && maxPrice != null) {
+            result = productRepository.findByPriceBetween(minPrice, maxPrice, pageRequest);
+        } else if (minPrice != null) {
+            result = productRepository.findByPriceGreaterThanEqual(minPrice, pageRequest);
+        } else if (maxPrice != null) {
+            result = productRepository.findByPriceLessThanEqual(maxPrice, pageRequest);
+        } else {
+            result = productRepository.findAll(pageRequest);
+        }
 
         List<ProductInfoResponse> productList = result.getContent()
                 .stream()
@@ -166,6 +176,7 @@ public class ProductServiceImpl implements ProductService {
                 result.getNumber() + 1,
                 result.getSize(),
                 result.getTotalPages(),
+                result.getTotalElements(),
                 productList
         );
         return ResponseEntity.ok(
@@ -190,6 +201,7 @@ public class ProductServiceImpl implements ProductService {
                 result.getNumber() + 1,
                 result.getSize(),
                 result.getTotalPages(),
+                result.getTotalElements(),
                 productList
         );
         return ResponseEntity.ok(

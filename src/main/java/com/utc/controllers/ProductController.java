@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,10 +55,17 @@ public class ProductController {
     @GetMapping("/info")
     public ResponseEntity<GetAllProductResponse> getAllProduct(
             @RequestParam(defaultValue = "1") @Min(1) int page,
-            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
+            @RequestParam(defaultValue = "createdDate") String sortBy,
+            @RequestParam(defaultValue = "desc") String orderBy,
+            @RequestParam(required = false) Long min,
+            @RequestParam(required = false) Long max
     ) {
-        log.info("Request getAllProduct: page={}, size={}", page, size);
-        return productService.getAllProduct(PageRequest.of(page - 1, size));
+        log.info("Request getAllProduct: page={}, size={}, sortBy={}, orderBy={}, min={}, max={}", page, size, sortBy, orderBy, min, max);
+        Sort.Direction direction = orderBy.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, sortBy);
+
+        return productService.getAllProduct(PageRequest.of(page - 1, size, sort), min, max);
     }
 
     @GetMapping("/user/{user_id}")

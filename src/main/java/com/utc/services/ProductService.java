@@ -21,7 +21,7 @@ public interface ProductService {
 
     ResponseEntity<RestApiResponse> updateProduct(Long productId, UpdateProductRequest updateProductRequest);
 
-    ResponseEntity<GetAllProductResponse> getAllProduct(PageRequest pageRequest);
+    ResponseEntity<GetAllProductResponse> getAllProduct(PageRequest pageRequest, Long minPrice, Long maxPrice);
 
     ResponseEntity<GetAllProductResponse> getProductListByUserId(Long userId, PageRequest pageRequest);
 
