@@ -19,5 +19,6 @@ public class ProductListResponse {
     private Integer pageNumber;
     private Integer pageSize;
     private Integer totalPage;
+    private Long totalCount;
     private List<ProductInfoResponse> productList;
 }
