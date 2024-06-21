@@ -83,4 +83,19 @@ public class ProductController {
         log.info("Request getProductById: {}", id);
         return productService.getProductById(id);
     }
+
+    @GetMapping("/find")
+    public ResponseEntity<GetAllProductResponse> findProductByName(
+            @RequestParam(defaultValue = "1") @Min(1) int page,
+            @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size,
+            @RequestParam(defaultValue = "createdDate") String sortBy,
+            @RequestParam(defaultValue = "desc") String orderBy,
+            @RequestParam(required = false) String q
+    ) {
+        log.info("Request getAllProduct: key={} page={}, size={}, sortBy={}, orderBy={}", q, page, size, sortBy, orderBy);
+        Sort.Direction direction = orderBy.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sort = Sort.by(direction, sortBy);
+
+        return productService.findProductByName(PageRequest.of(page - 1, size, sort), q);
+    }
 }

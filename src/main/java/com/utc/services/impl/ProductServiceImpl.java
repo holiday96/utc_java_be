@@ -14,12 +14,14 @@ import com.utc.repository.CategoryRepository;
 import com.utc.repository.ProductRepository;
 import com.utc.repository.UserRepository;
 import com.utc.services.ProductService;
+import com.utc.specification.ProductSpecification;
 import com.utc.utils.MessageUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -225,6 +227,32 @@ public class ProductServiceImpl implements ProductService {
                         ApiStatus.SUCCESS.code,
                         ApiStatus.SUCCESS.toString().toLowerCase(),
                         convertToInfoResponse(product)
+                )
+        );
+    }
+
+    @Override
+    public ResponseEntity<GetAllProductResponse> findProductByName(PageRequest pageRequest, String q) {
+        Specification<Product> specification = Specification.where(ProductSpecification.hasTitleLike(q));
+        Page<Product> result = productRepository.findAll(specification, pageRequest);
+
+        List<ProductInfoResponse> productList = result.getContent()
+                .stream()
+                .map(this::convertToInfoResponse)
+                .collect(Collectors.toList());
+
+        ProductListResponse productListResponse = new ProductListResponse(
+                result.getNumber() + 1,
+                result.getSize(),
+                result.getTotalPages(),
+                result.getTotalElements(),
+                productList
+        );
+        return ResponseEntity.ok(
+                new GetAllProductResponse(
+                        ApiStatus.SUCCESS.code,
+                        ApiStatus.SUCCESS.toString().toLowerCase(),
+                        productListResponse
                 )
         );
     }
