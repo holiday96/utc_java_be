@@ -26,4 +26,6 @@ public interface ProductService {
     ResponseEntity<GetAllProductResponse> getProductListByUserId(Long userId, PageRequest pageRequest);
 
     ResponseEntity<GetProductResponse> getProductById(Long id);
+
+    ResponseEntity<GetAllProductResponse> findProductByName(PageRequest pageRequest, String keyName);
 }
