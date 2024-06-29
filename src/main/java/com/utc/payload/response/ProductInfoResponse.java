@@ -1,11 +1,15 @@
 package com.utc.payload.response;
 
+import com.utc.models.Category;
+import com.utc.models.Product;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Project_name : UTC_Java
@@ -18,6 +22,7 @@ import java.util.List;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
+@Accessors(chain = true)
 public class ProductInfoResponse {
     Long id;
 
@@ -38,4 +43,29 @@ public class ProductInfoResponse {
     List<Long> categories;
 
     Long userId;
+
+    public ProductInfoResponse(Product product) {
+        this.id = product.getId();
+
+        this.title = product.getTitle();
+
+        this.content = product.getContent();
+
+        this.image = product.getImage();
+
+        this.price = product.getPrice();
+
+        this.amount = product.getAmount();
+
+        this.unit = product.getUnit();
+
+        this.status = product.getStatus();
+
+        this.categories = product.getCategories()
+                .stream()
+                .map(Category::getId)
+                .collect(Collectors.toList());
+
+        this.userId = product.getUserId();
+    }
 }

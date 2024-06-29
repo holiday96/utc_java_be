@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * Project_name : UTC_Java
  *
@@ -21,4 +23,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     Page<Product> findByPriceBetween(Long minPrice, Long maxPrice, Pageable pageable);
     Page<Product> findByPriceGreaterThanEqual(Long minPrice, Pageable pageable);
     Page<Product> findByPriceLessThanEqual(Long maxPrice, Pageable pageable);
+
+    List<Product> findAllByIdInAndStatus(List<Long> productIds, int i);
 }
