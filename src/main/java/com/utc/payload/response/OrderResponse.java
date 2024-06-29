@@ -12,7 +12,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class OrderResponse {
     Long orderId;
-    Integer totalAmount;
+    Long totalAmount;
     String address;
     String phone;
     String note;

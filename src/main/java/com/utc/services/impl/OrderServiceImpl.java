@@ -42,7 +42,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void create(OrderRequest orderRequest) {
         User user = getUserFromContext(userRepository);
-        Integer totalAmount = checkAndComputeAmountProduct(orderRequest.getProductQuantities());
+        Long totalAmount = checkAndComputeAmountProduct(orderRequest.getProductQuantities());
         Date newDate = new Date();
         Order order = buildOrder(orderRequest, newDate, totalAmount, user.getId());
         order = orderRepository.save(order);
@@ -141,7 +141,7 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
     }
 
-    private Order buildOrder(OrderRequest orderRequest, Date newDate, Integer totalAmount, Long userId) {
+    private Order buildOrder(OrderRequest orderRequest, Date newDate, Long totalAmount, Long userId) {
         return new Order()
                 .address(orderRequest.getAddress())
                 .note(orderRequest.getNote())
@@ -153,7 +153,7 @@ public class OrderServiceImpl implements OrderService {
                 .modifiedBy("ADMIN");
     }
 
-    private Integer checkAndComputeAmountProduct(List<ProductQuantity> productQuantities) {
+    private Long checkAndComputeAmountProduct(List<ProductQuantity> productQuantities) {
         Map<Long, Integer> productIds = productQuantities.stream()
                 .collect(Collectors.toMap(ProductQuantity::getProductId, ProductQuantity::getQuantity));
         List<Product> products = productRepository.findAllByIdInAndStatus(new ArrayList<>(productIds.keySet()), 1);
@@ -165,9 +165,9 @@ public class OrderServiceImpl implements OrderService {
                 .peek(product -> product.setAmount(product.getAmount() - productIds.get(product.getId())))
                 .collect(Collectors.toList());
         productRepository.saveAll(products);
-        return productQuantities.stream()
-                .map(ProductQuantity::getQuantity)
-                .reduce(Integer::sum)
-                .orElse(0);
+        return products.stream()
+                .map(Product::getPrice)
+                .reduce(Long::sum)
+                .orElse(0L);
     }
 }

@@ -24,7 +24,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    Integer totalAmount;
+    Long totalAmount;
     String address;
     String phone;
     String note;
