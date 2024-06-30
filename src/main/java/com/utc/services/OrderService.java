@@ -5,13 +5,11 @@ import com.utc.payload.response.OrderResponse;
 import com.utc.payload.response.PageResponse;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.List;
-
 public interface OrderService {
     void create(OrderRequest orderRequest);
-    List<OrderResponse> getByUserIdAndStatus(Long userId, Integer status);
+    PageResponse<OrderResponse> getByUserIdAndStatus(Long userId, Integer status, PageRequest pageRequest);
 
-    List<OrderResponse> getByUserId(Long userId);
+    PageResponse<OrderResponse> getByUserId(Long userId, PageRequest pageRequest);
 
     PageResponse<OrderResponse> gets(PageRequest pageRequest);
 

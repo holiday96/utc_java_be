@@ -1,14 +1,14 @@
 package com.utc.repository;
 
 import com.utc.models.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findByUserIdAndStatus(Long userId, Integer status);
+    Page<Order> findByUserIdAndStatus(Long userId, Integer status, Pageable pageable);
 
-    List<Order> findByUserId(Long userId);
+    Page<Order> findByUserId(Long userId, Pageable pageable);
 }

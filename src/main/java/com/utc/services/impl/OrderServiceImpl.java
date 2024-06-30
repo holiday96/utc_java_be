@@ -51,15 +51,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getByUserIdAndStatus(Long userId, Integer status) {
-        List<Order> orders = orderRepository.findByUserIdAndStatus(userId, status);
-        return getOrderResponses(orders);
+    public PageResponse<OrderResponse> getByUserIdAndStatus(Long userId, Integer status, PageRequest pageRequest) {
+        Page<Order> orders = orderRepository.findByUserIdAndStatus(userId, status, pageRequest);
+        List<OrderResponse> orderResponses = getOrderResponses(orders.getContent());
+        return new PageResponse<OrderResponse>()
+                .setPageNumber(orders.getNumber() + 1)
+                .setPageSize(orders.getSize())
+                .setTotalPage(orders.getTotalPages())
+                .setTotalCount(orders.getTotalElements())
+                .setData(orderResponses);
     }
 
     @Override
-    public List<OrderResponse> getByUserId(Long userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
-        return getOrderResponses(orders);
+    public PageResponse<OrderResponse> getByUserId(Long userId, PageRequest pageRequest) {
+        Page<Order> orders = orderRepository.findByUserId(userId, pageRequest);
+        List<OrderResponse> orderResponses = getOrderResponses(orders.getContent());
+        return new PageResponse<OrderResponse>()
+                .setPageNumber(orders.getNumber() + 1)
+                .setPageSize(orders.getSize())
+                .setTotalPage(orders.getTotalPages())
+                .setTotalCount(orders.getTotalElements())
+                .setData(orderResponses);
     }
 
     @Override
