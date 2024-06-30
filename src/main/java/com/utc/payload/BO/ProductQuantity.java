@@ -10,9 +10,10 @@ import javax.validation.constraints.Positive;
 @Accessors(chain = true)
 public class ProductQuantity {
     @NotNull
-            @Positive
+    @Positive
     Long productId;
+    
     @NotNull
-            @Positive
+    @Positive
     Integer quantity;
 }

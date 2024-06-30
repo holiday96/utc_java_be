@@ -51,8 +51,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getByUserIdAndStatus(Long userId, CoreStatus status) {
-        List<Order> orders = orderRepository.findByUserIdAndStatus(userId, status.getCode());
+    public List<OrderResponse> getByUserIdAndStatus(Long userId, Integer status) {
+        List<Order> orders = orderRepository.findByUserIdAndStatus(userId, status);
         return getOrderResponses(orders);
     }
 
@@ -76,11 +76,11 @@ public class OrderServiceImpl implements OrderService {
 
 
     @Override
-    public void update(Long orderId, CoreStatus status) {
+    public void update(Long orderId, Integer status) {
         Order orderCurrent = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ValidateException(ApiStatus.BAD_REQUEST.toString()
                         , String.format("Order with Id: %s not found !", orderId)));
-        orderCurrent.status(status.getCode());
+        orderCurrent.status(status);
         orderRepository.save(orderCurrent);
     }
 
@@ -115,6 +115,7 @@ public class OrderServiceImpl implements OrderService {
                 .setAddress(order.address())
                 .setPhone(order.phone())
                 .setNote(order.note())
+                .setStatus(order.status())
                 .setUserId(order.userId())
                 .setOrderDetailResponses(
                         orderDetails.stream()

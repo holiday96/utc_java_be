@@ -16,6 +16,7 @@ public class OrderResponse {
     String address;
     String phone;
     String note;
+    Integer status;
     Long userId;
     List<OrderDetailResponse> orderDetailResponses;
 }

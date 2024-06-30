@@ -8,6 +8,8 @@ import com.utc.payload.response.PageResponse;
 import com.utc.payload.response.RestApiResponse;
 import com.utc.services.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -24,6 +26,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @Validated
 public class OrderController {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderController.class);
+
     private final OrderService orderService;
 
     @PostMapping
@@ -39,12 +44,12 @@ public class OrderController {
 
     @GetMapping("/user/{id}")
     public ResponseEntity<List<OrderResponse>> getByUserId(@PathVariable Long id,
-                                                           @RequestParam(required = false) String status) {
+                                                           @RequestParam(required = false) Integer status) {
         List<OrderResponse> orderResponses;
         if (status == null) {
             orderResponses = orderService.getByUserId(id);
         } else {
-            orderResponses = orderService.getByUserIdAndStatus(id, CoreStatus.valueOf(status));
+            orderResponses = orderService.getByUserIdAndStatus(id, status);
         }
         return ResponseEntity.ok(orderResponses);
     }
@@ -57,8 +62,9 @@ public class OrderController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<RestApiResponse> update(@PathVariable Long id,
-                                    @RequestParam String status) {
-        orderService.update(id, CoreStatus.valueOf(status));
+                                                  @RequestParam Integer status) {
+        log.info("Request updateOrder: id={}, status={}", id, status);
+        orderService.update(id, status);
         return ResponseEntity.ok(
                 new RestApiResponse(
                         ApiStatus.SUCCESS.code,
