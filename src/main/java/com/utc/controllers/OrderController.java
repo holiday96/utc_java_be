@@ -32,6 +32,7 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<RestApiResponse> createOrder(@RequestBody @Valid OrderRequest orderRequest) {
+        log.info("Request createOrder: {}", orderRequest);
         orderService.create(orderRequest);
         return ResponseEntity.ok(
                 new RestApiResponse(
@@ -42,10 +43,12 @@ public class OrderController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<PageResponse<OrderResponse>> getByUserId(@RequestParam(defaultValue = "1", required = false) @Min(1) int page,
+    public ResponseEntity<PageResponse<OrderResponse>> getOrderByUserId(@RequestParam(defaultValue = "1", required = false) @Min(1) int page,
                                                            @RequestParam(defaultValue = "10", required = false) @Min(1) @Max(100) int size,
                                                            @PathVariable Long id,
                                                            @RequestParam(required = false) Integer status) {
+        log.info("Request getOrderByUserId: page={}, size={}, id={}, status={}", page, size, id, status);
+
         Sort.Direction direction = Sort.Direction.DESC;
         Sort sort = Sort.by(direction, "createdDate");
         PageResponse<OrderResponse> orderResponses;
@@ -58,15 +61,17 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<PageResponse<OrderResponse>> gets(@RequestParam(defaultValue = "1") @Min(1) int page,
+    public ResponseEntity<PageResponse<OrderResponse>> getAllOrder(@RequestParam(defaultValue = "1") @Min(1) int page,
                                                             @RequestParam(defaultValue = "10") @Min(1) @Max(100) int size) {
+        log.info("Request getAllOrder: page={}, size={}", page, size);
+
         Sort.Direction direction = Sort.Direction.DESC;
         Sort sort = Sort.by(direction, "createdDate");
         return ResponseEntity.ok(orderService.gets(PageRequest.of(page - 1, size, sort)));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<RestApiResponse> update(@PathVariable Long id,
+    public ResponseEntity<RestApiResponse> updateOrder(@PathVariable Long id,
                                                   @RequestParam Integer status) {
         log.info("Request updateOrder: id={}, status={}", id, status);
         orderService.update(id, status);
